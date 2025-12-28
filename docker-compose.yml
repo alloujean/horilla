@@ -11,21 +11,10 @@ services:
       - .env
     depends_on:
       - redis
-    networks:
-      - dokploy-network
-      - default
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.rh-horilla-web.rule=Host(`rh-horilla-jiccaz-bb1eba-136-112-175-192.traefik.me`)"
-      - "traefik.http.routers.rh-horilla-web.entrypoints=web,websecure"
-      - "traefik.http.services.rh-horilla-web.loadbalancer.server.port=8000"
-      - "traefik.docker.network=dokploy-network"
+    expose:
+      - "8000"
     command: >
       sh -c "python manage.py migrate &&
              python manage.py collectstatic --noinput &&
              gunicorn horilla.wsgi:application --bind 0.0.0.0:8000"
     restart: always
-
-networks:
-  dokploy-network:
-    external: true
