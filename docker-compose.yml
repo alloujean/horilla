@@ -30,7 +30,7 @@ services:
     depends_on:
       - redis
       - web
-    command: celery -A horilla worker -l info
+    command: python -m celery -A horilla worker -l info
     restart: always
 
   celery-beat:
@@ -42,5 +42,5 @@ services:
     depends_on:
       - redis
       - web
-    command: celery -A horilla beat -l info
+    command: python -m celery -A horilla beat -l info
     restart: always
