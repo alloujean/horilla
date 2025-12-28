@@ -1,4 +1,14 @@
 services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: horilla
+      POSTGRES_USER: horilla
+      POSTGRES_PASSWORD: horilla123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
   redis:
     image: redis:7
     restart: always
@@ -7,14 +17,19 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    env_file:
-      - .env
+    environment:
+      - DATABASE_URL=postgresql://horilla:horilla123@db:5432/horilla
     depends_on:
+      - db
       - redis
     expose:
       - "8000"
     command: >
-      sh -c "python manage.py migrate &&
+      sh -c "sleep 5 &&
+             python manage.py migrate &&
              python manage.py collectstatic --noinput &&
              gunicorn horilla.wsgi:application --bind 0.0.0.0:8000"
     restart: always
+
+volumes:
+  postgres_data:
