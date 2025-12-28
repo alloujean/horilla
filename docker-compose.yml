@@ -13,11 +13,6 @@ services:
       - redis
     ports:
       - "8000:8000"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.horilla.rule=Host(`rh-horilla-jiccaz-bb1eba-136-112-175-192.traefik.me`)"
-      - "traefik.http.routers.horilla.entrypoints=web,websecure"
-      - "traefik.http.services.horilla.loadbalancer.server.port=8000"
     command: >
       sh -c "python manage.py migrate &&
              python manage.py collectstatic --noinput &&
